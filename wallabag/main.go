@@ -1,4 +1,4 @@
-package services
+package wallabag
 
 import (
     "bytes"
@@ -53,7 +53,7 @@ type WallabagItem struct {
     IsArchived bool `json:is_archived"`
 }
 
-func NewWallabag(path string) Wallabag {
+func New(path string) Wallabag {
     var wallabag Wallabag
     jsonFile, _ := os.Open(path)
     byteValue, _ := ioutil.ReadAll(jsonFile)
@@ -61,10 +61,11 @@ func NewWallabag(path string) Wallabag {
     config.GrantType = "password"
     json.Unmarshal(byteValue, &config)
     wallabag.Config = config
+    wallabag.login()
     return wallabag
 }
 
-func (w *Wallabag) Login() {
+func (w *Wallabag) login() {
     req, _ := json.Marshal(w.Config)
     resp, _ := http.Post("https://"+w.Config.Host+"/oauth/v2/token", "application/json", bytes.NewBuffer(req))
     body, _ := ioutil.ReadAll(resp.Body)

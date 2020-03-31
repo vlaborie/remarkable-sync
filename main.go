@@ -8,7 +8,7 @@ import (
     "time"
     "encoding/json"
 
-    "github.com/vlaborie/reMarkable-sync/services"
+    "github.com/vlaborie/reMarkable-sync/wallabag"
 )
 
 type Remarkable struct {
@@ -48,7 +48,7 @@ func (Remarkable *Remarkable) addDir(id string, name string, parent string) Rema
     return RemarkableItem
 }
 
-func (RemarkableItem *RemarkableItem) fromWallabag(WallabagItem services.WallabagItem) {
+func (RemarkableItem *RemarkableItem) fromWallabag(WallabagItem wallabag.WallabagItem) {
     RemarkableItem.Id = strconv.FormatInt(WallabagItem.Id, 10)
     RemarkableItem.Type = "DocumentType"
     RemarkableItem.Parent = "wallabag"
@@ -76,8 +76,7 @@ func indicator(channel <-chan struct{}) {
 }
 
 func main() {
-    Wallabag := services.NewWallabag(".config/reMarkable-sync/wallabag.json")
-    Wallabag.Login()
+    Wallabag := wallabag.New(".config/reMarkable-sync/wallabag.json")
     Wallabag.GetPages(1)
 
     var Remarkable = Remarkable {
