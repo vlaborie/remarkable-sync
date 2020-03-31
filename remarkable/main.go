@@ -6,7 +6,7 @@ type Remarkable struct {
 }
 
 type RemarkableItem struct {
-    Id string
+    Id string `json:"-"`
     Type string `json:"type"`
     Parent string `json:"parent"`
     VisibleName string `json:"visibleName"`
@@ -17,8 +17,8 @@ type RemarkableItem struct {
     Modified bool `json:"modified"`
     Pinned bool `json:"pinned"`
     Synced bool `json:"synced"`
-    ContentType string
-    Content []byte
+    ContentType string `json:"-"`
+    Content []byte `json:"-"`
 }
 
 func New(dir string) Remarkable {
