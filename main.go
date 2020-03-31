@@ -27,9 +27,7 @@ func indicator(channel <-chan struct{}) {
 func main() {
     Wallabag := wallabag.New(".config/reMarkable-sync/wallabag.json")
 
-    var Remarkable = remarkable.Remarkable {
-        Dir: ".local/share/remarkable/xochitl/",
-    }
+    var Remarkable = remarkable.New(".local/share/remarkable/xochitl/")
 
     dir := Remarkable.AddDir("wallabag", "Wallabag", "")
     j, _ := json.Marshal(dir)

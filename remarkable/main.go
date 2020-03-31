@@ -20,6 +20,12 @@ type RemarkableItem struct {
     Content []byte
 }
 
+func New(dir string) Remarkable {
+    var remarkable Remarkable
+    remarkable.Dir = dir
+    return remarkable
+}
+
 func (Remarkable *Remarkable) AddDir(id string, name string, parent string) RemarkableItem {
     var RemarkableItem = RemarkableItem {
         Id: id,
