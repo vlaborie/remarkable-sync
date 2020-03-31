@@ -41,6 +41,7 @@ func main() {
             fmt.Print("Get EPUB of Wallabag element "+RemarkableItem.Id+" => ")
             channel := make(chan struct{})
             go indicator(channel)
+            RemarkableItem.ContentType = "epub"
             RemarkableItem.Content = Wallabag.GetEpub(RemarkableItem.Id)
             close(channel)
             fmt.Print("done\n")
@@ -51,7 +52,7 @@ func main() {
         fmt.Println("Metadata of "+RemarkableItem.Id+" updated")
 
         if len(RemarkableItem.Content) > 0 {
-            _ = ioutil.WriteFile(Remarkable.Dir+RemarkableItem.Id+".epub", RemarkableItem.Content, 0644)
+            _ = ioutil.WriteFile(Remarkable.Dir+RemarkableItem.Id+"."+RemarkableItem.ContentType, RemarkableItem.Content, 0644)
             fmt.Println("EPUB of "+RemarkableItem.Id+" writed")
         }
     }

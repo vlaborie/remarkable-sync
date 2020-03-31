@@ -17,6 +17,7 @@ type RemarkableItem struct {
     Modified bool `json:"modified"`
     Pinned bool `json:"pinned"`
     Synced bool `json:"synced"`
+    ContentType string
     Content []byte
 }
 
