@@ -6,23 +6,15 @@ import (
     "encoding/json"
 
     "github.com/vlaborie/reMarkable-sync/remarkable"
-    "github.com/vlaborie/reMarkable-sync/wallabag"
 
     "github.com/bmaupin/go-epub"
 )
 
 func main() {
-    Wallabag := wallabag.New(".config/reMarkable-sync/wallabag.json")
-
     Remarkable := remarkable.New(".local/share/remarkable/xochitl/")
-    dir := Remarkable.AddDir("wallabag", "Wallabag", "")
-    Remarkable.Items = append(Remarkable.Items, dir)
 
-    for _, WallabagItem := range Wallabag.Items {
-        var RemarkableItem remarkable.RemarkableItem
-        RemarkableItem.FromWallabag(WallabagItem)
-        Remarkable.Items = append(Remarkable.Items, RemarkableItem)
-    }
+    Remarkable.Wallabag(".config/reMarkable-sync/wallabag.json")
+    Remarkable.Miniflux(".config/reMarkable-sync/miniflux.json")
 
     for _, RemarkableItem := range Remarkable.Items {
         if RemarkableItem.ContentType == "html" {

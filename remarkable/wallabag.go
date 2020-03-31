@@ -6,6 +6,16 @@ import (
     "github.com/vlaborie/reMarkable-sync/wallabag"
 )
 
+func (Remarkable *Remarkable) Wallabag(path string) {
+    Remarkable.Items = append(Remarkable.Items, Remarkable.AddDir("wallabag", "Wallabag", ""))
+    Wallabag := wallabag.New(path)
+    for _, wallabagItem := range Wallabag.Items {
+        var RemarkableItem RemarkableItem
+        RemarkableItem.FromWallabag(wallabagItem)
+        Remarkable.Items = append(Remarkable.Items, RemarkableItem)
+    }
+}
+
 func (RemarkableItem *RemarkableItem) FromWallabag(WallabagItem wallabag.WallabagItem) {
     RemarkableItem.Id = strconv.FormatInt(WallabagItem.Id, 10)
     RemarkableItem.Type = "DocumentType"

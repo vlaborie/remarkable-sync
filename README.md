@@ -4,7 +4,8 @@
 
 ## Supported services
 
-Currently the only supported service is [Wallabag](https://www.wallabag.org).
+* [Wallabag](https://www.wallabag.org)
+* [Miniflux](https://miniflux.app)
 
 ## Build
 
@@ -45,6 +46,17 @@ Edit *~/.config/reMarkable-sync/wallabag.json* on your reMarkable:
     "client_secret": ""client_secret,
     "username": "login",
     "password": "password"
+}
+~~~
+
+### Miniflux
+
+Edit *~/.config/reMarkable-sync/miniflux.json* on your reMarkable:
+
+~~~
+{
+    "host": "app.miniflux.net",
+    "token": "token"
 }
 ~~~
 
