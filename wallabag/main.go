@@ -12,7 +12,7 @@ import (
 type Wallabag struct {
     Config WallabagConfig
     Token WallabagToken
-    Pages []WallabagPage
+    Items []WallabagItem
 }
 
 type WallabagConfig struct {
@@ -62,6 +62,7 @@ func New(path string) Wallabag {
     json.Unmarshal(byteValue, &config)
     wallabag.Config = config
     wallabag.login()
+    wallabag.getPages(1)
     return wallabag
 }
 
@@ -74,7 +75,7 @@ func (w *Wallabag) login() {
     w.Token = token
 }
 
-func (w *Wallabag) GetPages(p int64) {
+func (w *Wallabag) getPages(p int64) {
     page := strconv.FormatInt(p, 10)
 
     client := &http.Client{}
@@ -92,9 +93,9 @@ func (w *Wallabag) GetPages(p int64) {
     json.Unmarshal(body, &wallabagPage)
 
     if wallabagPage.Page != wallabagPage.Pages {
-        w.GetPages(wallabagPage.Page+1)
+        w.getPages(wallabagPage.Page+1)
     }
-    w.Pages = append(w.Pages, wallabagPage)
+    w.Items = append(w.Items, wallabagPage.Embedded.Items...)
 }
 
 func (w *Wallabag) GetEpub(id string) []byte {
