@@ -14,11 +14,10 @@ type MinifluxConfig struct {
     Token string `json:"token"`
 }
 
-func (Remarkable *Remarkable) Miniflux(path string) {
+func (Remarkable *Remarkable) Miniflux(File *os.File) {
     Remarkable.Items = append(Remarkable.Items, Remarkable.AddDir("miniflux", "Miniflux", ""))
 
-    jsonFile, _ := os.Open(path)
-    byteValue, _ := ioutil.ReadAll(jsonFile)
+    byteValue, _ := ioutil.ReadAll(File)
     var config MinifluxConfig
     json.Unmarshal(byteValue, &config)
 

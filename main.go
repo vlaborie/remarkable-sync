@@ -4,6 +4,7 @@ import (
     "io/ioutil"
     "fmt"
     "encoding/json"
+    "os"
 
     "github.com/vlaborie/reMarkable-sync/remarkable"
 
@@ -13,8 +14,15 @@ import (
 func main() {
     Remarkable := remarkable.New(".local/share/remarkable/xochitl/")
 
-    Remarkable.Wallabag(".config/reMarkable-sync/wallabag.json")
-    Remarkable.Miniflux(".config/reMarkable-sync/miniflux.json")
+    wallabagConfig, err := os.Open(".config/reMarkable-sync/wallabag.json")
+    if err == nil {
+        Remarkable.Wallabag(wallabagConfig)
+    }
+
+    minifluxConfig, err := os.Open(".config/reMarkable-sync/miniflux.json")
+    if err == nil {
+        Remarkable.Miniflux(minifluxConfig)
+    }
 
     for _, RemarkableItem := range Remarkable.Items {
         if RemarkableItem.ContentType == "html" {

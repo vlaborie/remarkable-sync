@@ -54,10 +54,9 @@ type WallabagItem struct {
     Content string `json:"content"`
 }
 
-func New(path string) Wallabag {
+func New(File *os.File) Wallabag {
     var wallabag Wallabag
-    jsonFile, _ := os.Open(path)
-    byteValue, _ := ioutil.ReadAll(jsonFile)
+    byteValue, _ := ioutil.ReadAll(File)
     var config WallabagConfig
     config.GrantType = "password"
     json.Unmarshal(byteValue, &config)
