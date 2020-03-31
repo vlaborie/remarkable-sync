@@ -2,58 +2,39 @@ package main
 
 import (
     "io/ioutil"
-    "os"
     "fmt"
-    "time"
     "encoding/json"
 
     "github.com/vlaborie/reMarkable-sync/remarkable"
     "github.com/vlaborie/reMarkable-sync/wallabag"
-)
 
-func indicator(channel <-chan struct{}) {
-    ticker := time.NewTicker(time.Second)
-    defer ticker.Stop()
-    for {
-        select {
-        case <-ticker.C:
-            fmt.Print(".")
-        case <-channel:
-            return
-        }
-    }
-}
+    "github.com/bmaupin/go-epub"
+)
 
 func main() {
     Wallabag := wallabag.New(".config/reMarkable-sync/wallabag.json")
 
-    var Remarkable = remarkable.New(".local/share/remarkable/xochitl/")
-
+    Remarkable := remarkable.New(".local/share/remarkable/xochitl/")
     dir := Remarkable.AddDir("wallabag", "Wallabag", "")
-    j, _ := json.Marshal(dir)
-    _ = ioutil.WriteFile(Remarkable.Dir+"wallabag.metadata", j, 0644)
+    Remarkable.Items = append(Remarkable.Items, dir)
 
     for _, WallabagItem := range Wallabag.Items {
         var RemarkableItem remarkable.RemarkableItem
         RemarkableItem.FromWallabag(WallabagItem)
+        Remarkable.Items = append(Remarkable.Items, RemarkableItem)
+    }
 
-        if _, err := os.Stat(Remarkable.Dir+RemarkableItem.Id+".epub"); os.IsNotExist(err) {
-            fmt.Print("Get EPUB of Wallabag element "+RemarkableItem.Id+" => ")
-            channel := make(chan struct{})
-            go indicator(channel)
+    for _, RemarkableItem := range Remarkable.Items {
+        if RemarkableItem.ContentType == "html" {
             RemarkableItem.ContentType = "epub"
-            RemarkableItem.Content = Wallabag.GetEpub(RemarkableItem.Id)
-            close(channel)
-            fmt.Print("done\n")
+            e := epub.NewEpub(RemarkableItem.VisibleName)
+            e.AddSection(string(RemarkableItem.Content), "Section 1", "", "")
+            e.Write(Remarkable.Dir+RemarkableItem.Id+"."+RemarkableItem.ContentType)
+            fmt.Println("EPUB of "+RemarkableItem.Id+" writed")
         }
 
         j, _ := json.Marshal(RemarkableItem)
         _ = ioutil.WriteFile(Remarkable.Dir+RemarkableItem.Id+".metadata", j, 0644)
         fmt.Println("Metadata of "+RemarkableItem.Id+" updated")
-
-        if len(RemarkableItem.Content) > 0 {
-            _ = ioutil.WriteFile(Remarkable.Dir+RemarkableItem.Id+"."+RemarkableItem.ContentType, RemarkableItem.Content, 0644)
-            fmt.Println("EPUB of "+RemarkableItem.Id+" writed")
-        }
     }
 }

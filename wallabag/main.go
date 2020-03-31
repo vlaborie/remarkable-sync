@@ -51,6 +51,7 @@ type WallabagItem struct {
     UpdatedAt string `json:"updated_at"`
     IsStarred bool `json:"is_starred"`
     IsArchived bool `json:is_archived"`
+    Content string `json:"content"`
 }
 
 func New(path string) Wallabag {
@@ -83,7 +84,7 @@ func (w *Wallabag) getPages(p int64) {
     req, _ := http.NewRequest("GET", "https://"+w.Config.Host+"/api/entries.json", nil)
     req.Header.Set("Authorization", "Bearer "+w.Token.AccessToken)
     q := req.URL.Query()
-    q.Add("detail", "metadata")
+    q.Add("detail", "full")
     q.Add("page", page)
     req.URL.RawQuery = q.Encode()
     res, _ := client.Do(req)
@@ -96,14 +97,4 @@ func (w *Wallabag) getPages(p int64) {
         w.getPages(wallabagPage.Page+1)
     }
     w.Items = append(w.Items, wallabagPage.Embedded.Items...)
-}
-
-func (w *Wallabag) GetEpub(id string) []byte {
-    client := &http.Client{}
-    req, _ := http.NewRequest("GET", "https://"+w.Config.Host+"/api/entries/"+id+"/export.epub", nil)
-    req.Header.Set("Authorization", "Bearer "+w.Token.AccessToken)
-    resp, _ := client.Do(req)
-    epub, _ := ioutil.ReadAll(resp.Body)
-    resp.Body.Close()
-    return epub
 }

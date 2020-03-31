@@ -18,4 +18,6 @@ func (RemarkableItem *RemarkableItem) FromWallabag(WallabagItem wallabag.Wallaba
     RemarkableItem.Modified = false
     RemarkableItem.Pinned = WallabagItem.IsStarred
     RemarkableItem.Synced = false
+    RemarkableItem.ContentType = "html"
+    RemarkableItem.Content = []byte(WallabagItem.Content)
 }
