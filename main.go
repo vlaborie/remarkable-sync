@@ -11,6 +11,11 @@ import (
     "github.com/vlaborie/reMarkable-sync/services"
 )
 
+type Remarkable struct {
+    Dir string
+    Items []RemarkableItem
+}
+
 type RemarkableItem struct {
     Id string
     Type string `json:"type"`
@@ -24,6 +29,23 @@ type RemarkableItem struct {
     Pinned bool `json:"pinned"`
     Synced bool `json:"synced"`
     Content []byte
+}
+
+func (Remarkable *Remarkable) addDir(id string, name string, parent string) RemarkableItem {
+    var RemarkableItem = RemarkableItem {
+        Id: id,
+        Type: "CollectionType",
+        Parent: parent,
+        VisibleName: name,
+        LastModified: "",
+        Version: 1,
+        Deleted: false,
+        MetadataModified: false,
+        Modified: false,
+        Pinned: false,
+        Synced: false,
+    }
+    return RemarkableItem
 }
 
 func (RemarkableItem *RemarkableItem) fromWallabag(WallabagItem services.WallabagItem) {
@@ -53,34 +75,25 @@ func indicator(channel <-chan struct{}) {
     }
 }
 
-const output = ".local/share/remarkable/xochitl/"
-
 func main() {
     Wallabag := services.NewWallabag(".config/reMarkable-sync/wallabag.json")
     Wallabag.Login()
     Wallabag.GetPages(1)
 
-    j, _ := json.Marshal(RemarkableItem {
-        Id: "wallabag",
-        Type: "CollectionType",
-        Parent: "",
-        VisibleName: "Wallabag",
-        LastModified: "",
-        Version: 1,
-        Deleted: false,
-        MetadataModified: false,
-        Modified: false,
-        Pinned: false,
-        Synced: false,
-    })
-    _ = ioutil.WriteFile(output+"wallabag.metadata", j, 0644)
+    var Remarkable = Remarkable {
+        Dir: ".local/share/remarkable/xochitl/",
+    }
+
+    dir := Remarkable.addDir("wallabag", "Wallabag", "")
+    j, _ := json.Marshal(dir)
+    _ = ioutil.WriteFile(Remarkable.Dir+"wallabag.metadata", j, 0644)
 
     for _, WallabagPage := range Wallabag.Pages {
         for _, WallabagItem := range WallabagPage.Embedded.Items {
             var RemarkableItem RemarkableItem
             RemarkableItem.fromWallabag(WallabagItem)
 
-            if _, err := os.Stat(output+RemarkableItem.Id+".epub"); os.IsNotExist(err) {
+            if _, err := os.Stat(Remarkable.Dir+RemarkableItem.Id+".epub"); os.IsNotExist(err) {
                 fmt.Print("Get EPUB of Wallabag element "+RemarkableItem.Id+" => ")
                 channel := make(chan struct{})
                 go indicator(channel)
@@ -90,11 +103,11 @@ func main() {
             }
 
             j, _ := json.Marshal(RemarkableItem)
-            _ = ioutil.WriteFile(output+RemarkableItem.Id+".metadata", j, 0644)
+            _ = ioutil.WriteFile(Remarkable.Dir+RemarkableItem.Id+".metadata", j, 0644)
             fmt.Println("Metadata of "+RemarkableItem.Id+" updated")
 
             if len(RemarkableItem.Content) > 0 {
-                _ = ioutil.WriteFile(output+RemarkableItem.Id+".epub", RemarkableItem.Content, 0644)
+                _ = ioutil.WriteFile(Remarkable.Dir+RemarkableItem.Id+".epub", RemarkableItem.Content, 0644)
                 fmt.Println("EPUB of "+RemarkableItem.Id+" writed")
             }
         }
