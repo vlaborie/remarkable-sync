@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"net/http"
-	"os"
 	"strconv"
 )
 
@@ -54,12 +53,15 @@ type WallabagItem struct {
 	Content    string `json:"content"`
 }
 
-func New(File *os.File) Wallabag {
+func New(host string, ID string, secret string, username string, password string) Wallabag {
 	var wallabag Wallabag
-	byteValue, _ := ioutil.ReadAll(File)
 	var config WallabagConfig
 	config.GrantType = "password"
-	json.Unmarshal(byteValue, &config)
+	config.Host = host
+	config.ClientId = ID
+	config.ClientSecret = secret
+	config.Username = username
+	config.Password = password
 	wallabag.Config = config
 	wallabag.login()
 	wallabag.getPages(1)

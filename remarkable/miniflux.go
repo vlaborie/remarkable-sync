@@ -1,27 +1,15 @@
 package remarkable
 
 import (
-	"encoding/json"
-	"io/ioutil"
-	"os"
 	"strconv"
 
 	miniflux "miniflux.app/client"
 )
 
-type MinifluxConfig struct {
-	Host  string `json:"host"`
-	Token string `json:"token"`
-}
-
-func (Remarkable *Remarkable) Miniflux(File *os.File) {
+func (Remarkable *Remarkable) Miniflux(host string, token string) {
 	Remarkable.Items = append(Remarkable.Items, Remarkable.AddDir("miniflux", "Miniflux", ""))
 
-	byteValue, _ := ioutil.ReadAll(File)
-	var config MinifluxConfig
-	json.Unmarshal(byteValue, &config)
-
-	Miniflux := miniflux.New("https://"+config.Host, config.Token)
+	Miniflux := miniflux.New("https://"+host, token)
 	m, _ := Miniflux.Entries(&miniflux.Filter{})
 	for _, MinifluxItem := range m.Entries {
 		var RemarkableItem RemarkableItem

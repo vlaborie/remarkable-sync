@@ -1,15 +1,14 @@
 package remarkable
 
 import (
-	"os"
 	"strconv"
 
 	"github.com/vlaborie/remarkable-sync/wallabag"
 )
 
-func (Remarkable *Remarkable) Wallabag(File *os.File) {
+func (Remarkable *Remarkable) Wallabag(host string, ID string, secret string, username string, password string) {
 	Remarkable.Items = append(Remarkable.Items, Remarkable.AddDir("wallabag", "Wallabag", ""))
-	Wallabag := wallabag.New(File)
+	Wallabag := wallabag.New(host, ID, secret, username, password)
 	for _, wallabagItem := range Wallabag.Items {
 		var RemarkableItem RemarkableItem
 		RemarkableItem.FromWallabag(wallabagItem)
