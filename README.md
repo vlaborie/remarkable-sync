@@ -63,10 +63,10 @@ Edit */etc/remarkable-sync/miniflux.json* on your reMarkable:
 
 ## Usage
 
-Connect to the tablet, run **remarkable-sync**, then restart **xochitl**:
+Connect to the tablet, run **remarkable-sync** **service**, then restart **xochitl**:
 
 ~~~
 ssh root@192.168.X.X
-remarkable-sync
+remarkable-sync [wallabag|miniflux]
 systemctl restart xochitl
 ~~~
