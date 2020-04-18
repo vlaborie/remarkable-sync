@@ -4,7 +4,7 @@ import (
 	"os"
 	"strconv"
 
-	"github.com/vlaborie/reMarkable-sync/wallabag"
+	"github.com/vlaborie/remarkable-sync/wallabag"
 )
 
 func (Remarkable *Remarkable) Wallabag(File *os.File) {

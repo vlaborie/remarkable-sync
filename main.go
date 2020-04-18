@@ -6,20 +6,20 @@ import (
 	"io/ioutil"
 	"os"
 
-	"github.com/vlaborie/reMarkable-sync/remarkable"
+	"github.com/vlaborie/remarkable-sync/remarkable"
 
 	"github.com/bmaupin/go-epub"
 )
 
 func main() {
-	Remarkable := remarkable.New(".local/share/remarkable/xochitl/")
+	Remarkable := remarkable.New("/home/root/.local/share/remarkable/xochitl/")
 
-	wallabagConfig, err := os.Open(".config/reMarkable-sync/wallabag.json")
+	wallabagConfig, err := os.Open("/etc/remarkable-sync/wallabag.json")
 	if err == nil {
 		Remarkable.Wallabag(wallabagConfig)
 	}
 
-	minifluxConfig, err := os.Open(".config/reMarkable-sync/miniflux.json")
+	minifluxConfig, err := os.Open("/etc/remarkable-sync/miniflux.json")
 	if err == nil {
 		Remarkable.Miniflux(minifluxConfig)
 	}

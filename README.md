@@ -1,6 +1,6 @@
-# reMarkable-sync
+# remarkable-sync
 
-**reMarkable-sync** is a Golang tool design to run on reMarkable paper tablet for syncing your document from different services.
+**remarkable-sync** is a Golang tool design to run on reMarkable paper tablet for syncing your document from different services.
 
 ## Supported services
 
@@ -12,7 +12,7 @@
 Build for run on reMarkable tablet :
 
 ~~~
-env GOOS=linux GOARCH=arm GOARM=7 go build -o reMarkable-sync
+env GOOS=linux GOARCH=arm GOARM=7 go build -o remarkable-sync
 ~~~
 
 ## Connection
@@ -27,17 +27,18 @@ ssh root@192.168.X.X
 
 ## Install
 
-For install, you just need to upload **reMarkable-sync** to your reMarkable:
+For install, you just need to upload **remarkable-sync** to your reMarkable:
 
 ~~~
-scp reMarkable-sync root@192.168.X.X:
+ssh root@192.168.X.X 'mkdir -p /usr/local/bin'
+scp remarkable-sync root@192.168.X.X:/usr/local/bin
 ~~~
 
 ## Config
 
 ### Wallabag
 
-Edit *~/.config/reMarkable-sync/wallabag.json* on your reMarkable:
+Edit */etc/remarkable-sync/wallabag.json* on your reMarkable:
 
 ~~~
 {
@@ -51,7 +52,7 @@ Edit *~/.config/reMarkable-sync/wallabag.json* on your reMarkable:
 
 ### Miniflux
 
-Edit *~/.config/reMarkable-sync/miniflux.json* on your reMarkable:
+Edit */etc/remarkable-sync/miniflux.json* on your reMarkable:
 
 ~~~
 {
@@ -62,9 +63,10 @@ Edit *~/.config/reMarkable-sync/miniflux.json* on your reMarkable:
 
 ## Usage
 
-Connect to the tablet, run **reMarkable-sync**, then restart **xochitl**:
+Connect to the tablet, run **remarkable-sync**, then restart **xochitl**:
 
 ~~~
 ssh root@192.168.X.X
-./reMarkable-sync && systemctl restart xochitl
+remarkable-sync
+systemctl restart xochitl
 ~~~

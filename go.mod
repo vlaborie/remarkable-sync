@@ -1,4 +1,4 @@
-module github.com/vlaborie/reMarkable-sync
+module github.com/vlaborie/remarkable-sync
 
 require (
 	github.com/bmaupin/go-epub v0.5.3
