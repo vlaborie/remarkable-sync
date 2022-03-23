@@ -64,6 +64,7 @@ func (Remarkable *Remarkable) Write() {
 
 		j, _ := json.Marshal(RemarkableItem)
 		_ = ioutil.WriteFile(Remarkable.Dir+RemarkableItem.Id+".metadata", j, 0644)
+		_ = ioutil.WriteFile(Remarkable.Dir+RemarkableItem.Id+".content", []byte("{}"), 0644)
 		fmt.Println("Metadata of " + RemarkableItem.Id + " updated")
 	}
 }
