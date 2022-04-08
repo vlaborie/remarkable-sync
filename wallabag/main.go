@@ -87,6 +87,7 @@ func (w *Wallabag) getPages(p int64) {
 	q := req.URL.Query()
 	q.Add("detail", "full")
 	q.Add("page", page)
+	q.Add("archive", "0")
 	req.URL.RawQuery = q.Encode()
 	res, _ := client.Do(req)
 	body, _ := ioutil.ReadAll(res.Body)

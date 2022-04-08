@@ -26,7 +26,7 @@ var (
 				fmt.Println("Enable Miniflux sync with config file:", minifluxConfig.ConfigFileUsed())
 				Remarkable.Items = append(Remarkable.Items, Remarkable.AddDir("miniflux", "Miniflux", ""))
 				Miniflux := miniflux.New("https://"+minifluxConfig.GetString("host"), minifluxConfig.GetString("token"))
-				m, _ := Miniflux.Entries(&miniflux.Filter{})
+				m, _ := Miniflux.CategoryEntries(5, &miniflux.Filter{})
 				for _, MinifluxItem := range m.Entries {
 					RemarkableItem := remarkable.RemarkableItem{
 						Id:               strconv.FormatInt(MinifluxItem.ID, 10),
